@@ -4,6 +4,6 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class JeronyCruz_Ap2_p2 : Application(){
+class JeronyCruz_Ap2_p2App : Application(){
 
 }
