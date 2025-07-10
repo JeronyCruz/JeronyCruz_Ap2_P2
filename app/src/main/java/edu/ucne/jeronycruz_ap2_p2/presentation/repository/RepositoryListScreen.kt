@@ -36,6 +36,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -70,6 +71,7 @@ fun RepositoryListScreen(
     scope: CoroutineScope,
     viewModel: RepositoryViewModel = hiltViewModel(),
     goToRepository: (String) -> Unit,
+    goToContributors: (String, String) -> Unit,
     createRepository: () -> Unit,
     deleteRepository: ((RepositoryDto) -> Unit)? = null
 ) {
@@ -101,6 +103,7 @@ fun RepositoryListScreen(
         uiState = uiState,
         reloadRepository = { viewModel.OnEvent(RepositoryEvent.GetRepositories) },
         goToRepository = goToRepository,
+        goToContributors = goToContributors,
         createRepository = createRepository,
         deleteRepository = deleteRepository,
         query = query,
@@ -118,6 +121,7 @@ fun RepositoryListBodyScreen(
     uiState: RepositoryUiState,
     reloadRepository: () -> Unit,
     goToRepository: (String) -> Unit,
+    goToContributors: (String, String) -> Unit,
     createRepository: () -> Unit,
     deleteRepository: ((RepositoryDto) -> Unit)? = null,
     query: String,
@@ -228,7 +232,10 @@ fun RepositoryListBodyScreen(
                                 goToRepository = { goToRepository(repository.name) },
                                 deleteRepository = deleteRepository,
                                 primaryColor = primaryColor,
-                                secondaryColor = secondaryColor
+                                secondaryColor = secondaryColor,
+                                onViewContributors = {
+                                    goToContributors("enelramon", repository.name)
+                                }
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }
@@ -284,7 +291,8 @@ fun RepositoryCard(
     goToRepository: () -> Unit,
     deleteRepository: ((RepositoryDto) -> Unit)?,
     primaryColor: Color,
-    secondaryColor: Color
+    secondaryColor: Color,
+    onViewContributors: () -> Unit
 ) {
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
@@ -319,7 +327,7 @@ fun RepositoryCard(
                         append(repository.description ?: "Sin descripción")
                     },
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.secondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -332,9 +340,20 @@ fun RepositoryCard(
                         append(repository.htmlUrl ?: "Sin URL")
                     },
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.secondary,
                     overflow = TextOverflow.Ellipsis
                 )
+
+                TextButton(
+                    onClick = onViewContributors,
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Text(
+                        text = "Ver Colaboradores",
+                        color = secondaryColor,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
             }
         }
     }
