@@ -216,7 +216,7 @@ fun ContributorCard(
                     .size(48.dp)
                     .background(
                         brush = Brush.horizontalGradient(
-                            colors = listOf(primaryColor, secondaryColor)
+                            colors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
                         ),
                         shape = CircleShape
                     )
